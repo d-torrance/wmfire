@@ -1,6 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(wmfire.c)
-AM_INIT_AUTOMAKE(wmfire, 0.0.3.8)
+AC_CANONICAL_SYSTEM
+AM_INIT_AUTOMAKE(wmfire, 0.0.3.9pre4)
 AM_CONFIG_HEADER(config.h)
 
 dnl Checks for programs.
@@ -22,6 +23,34 @@ AC_C_CONST
 AC_TYPE_PID_T
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS(strcspn strdup strspn strstr)
+AC_CHECK_FUNCS(strncmp strcspn strdup strspn strstr poll)
+
+dnl Checks for a few OSs, I don't know if hpux defines __hpux__, please
+dnl tell me if it does.. I do it here for safety..
+AC_MSG_CHECKING([OS for fireload_cpu.c])
+case $target_os in
+	sun*os* | solaris*)
+		AC_MSG_RESULT([Solaris])
+		DEFS="$DEFS -D__SOLARIS__ "
+		LIBS="$LIBS -lkstat " 
+		;;
+	hpux*)
+		AC_MSG_RESULT([HP/UX])
+		DEFS="$DEFS -Dhpux "
+		echo 'NOTE: Please drop me a line at zinx@linuxfreak.com on wether or not I'
+		echo "      to define hpux manually, or what I don't need to define."
+		;;
+	linux*)
+		AC_MSG_RESULT([Linux])
+		;;
+	netbsd*)
+		AC_MSG_RESULT([NetBSD])
+		;;
+	*)
+		AC_MSG_RESULT([*Unknown*])
+		echo 'WARNING: Unknown OS, defaulting to Linux method in fireload_cpu.c.'
+		echo '         This is probably not correct.  Please port fireload_cpu.c ;)'
+		;;
+esac
 
 AC_OUTPUT(Makefile)

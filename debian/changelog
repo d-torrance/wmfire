@@ -1,3 +1,17 @@
+wmfire (0.0.3.9pre4-2) unstable; urgency=low
+
+  * typo. closes: #125490
+  * install wmfire to /usr/bin not /usr/X11R6/bin.
+  * Remove 'undocumented manpage'. closes: #87084
+
+ -- Ryuichi Arafune <arafune@debian.org>  Sat, 22 Dec 2001 14:46:20 +0900
+
+wmfire (0.0.3.9pre4-1) unstable; urgency=low
+
+  * New upstream version: closes #46005, #61321
+
+ -- Ryuichi Arafune <arafune@debian.org>  Mon,  3 Apr 2000 20:18:50 +0900
+
 wmfire (0.0.3.8-3) unstable; urgency=low
 
   * Readme.Debian (empgy file) removed. (Bug#54371)
@@ -17,6 +31,3 @@ wmfire (0.0.3.8-1) unstable; urgency=low
 
  -- Ryuichi Arafune <arafune@debian.org>  Fri, 27 Aug 1999 12:33:40 +0900
 
-Local variables:
-mode: debian-changelog
-End:

@@ -1,4 +1,15 @@
 
+ 21/10/1999
+	Not too much, fiddled with flame code trying to optimize it, I
+	think I at least did _some_ good..
+
+ 30/09/1999
+	Integrated Solaris code by John Hitt
+	Realized how little work I actually do on wmfire...
+
+	Fixed a typo in README I just noticed, should be fireload_cpu -n not
+	fireload_file -n :/
+
  24/08/1999
 	Added some stuff so you can see the exact numbers being returned by
 	the external programs...

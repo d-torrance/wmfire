@@ -13,7 +13,7 @@ Invoking:
         wmfire	[-L[1|0|on|off|yes|no]] [-B[1|0|on|off|yes|no]]] [-C<0..2>]
         	[-s[1|0|on|off|yes|no]] [-P <program [args [...]]>] [-h]
 
-        -L        Toggles/Sets if flame height follows load
+        -L        Toggles/Sets if flame height follows info provided by -P
         -B        Toggles/Sets if load bar shows
         -s        Toggles/Sets if the numbers are shown
         -C<0..2> Start at a different colormap
@@ -28,7 +28,7 @@ Examples:
 	wmfire -B0 -C2
 
 	Start up wmfire with a bar, and follow load but don't show nice'd processes:
-	wmfire -P "fireload_file -n"
+	wmfire -P "fireload_cpu -n"
 
 	Full flame height all the time, no bar, flame with no blue, no numbers:
 	wmfire -L0 -B0 -C1 -s0

@@ -1,4 +1,14 @@
 
+ 21/10/1999
+	Veteran wmfire users might notice a slight change in the way the
+	fire looks..  Live with it, it's faster :)  If you really must
+	have the old look, uncomment the #define OLD_LOOK line and all
+	will be as it was..
+
+ 30/09/1999
+	Solaris should now have working load stuff, if it doesn't please
+	drop me a line.
+
  24/08/1999
 	wmfire shows the numbers corresponding to the flame height by default
 	now (didn't at all before), you can turn this off via -s0
