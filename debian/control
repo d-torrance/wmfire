@@ -1,0 +1,13 @@
+Source: wmfire
+Section: x11
+Priority: optional
+Maintainer: Ryuichi Arafune <arafune@debian.org>
+Standards-Version: 2.5.1
+
+Package: wmfire
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: A very cool fiery way of showing your cpu usage!
+ The display is a 64x64 window designed to Dock into 
+ Window Maker's Docking bar.
+   

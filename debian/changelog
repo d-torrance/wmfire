@@ -1,0 +1,22 @@
+wmfire (0.0.3.8-3) unstable; urgency=low
+
+  * Readme.Debian (empgy file) removed. (Bug#54371)
+
+ -- Ryuichi Arafune <arafune@debian.org>  Sat,  8 Jan 2000 09:29:04 +0900
+
+wmfire (0.0.3.8-2) unstable; urgency=low
+
+  * /usr/doc -> /usr/share/doc/ (Use debhelper 2.0.40).
+  * lintian free
+  
+ -- Ryuichi Arafune <arafune@debian.org>  Tue,  7 Sep 1999 20:31:51 +0900
+
+wmfire (0.0.3.8-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Ryuichi Arafune <arafune@debian.org>  Fri, 27 Aug 1999 12:33:40 +0900
+
+Local variables:
+mode: debian-changelog
+End:

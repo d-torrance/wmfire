@@ -1,0 +1,44 @@
+.TH WMFIRE 1x
+.\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
+.\" other parms are allowed: see man(7), man(1)
+.SH NAME
+wmfire \- Window Maker Dock app: Show the CPU usage as a fire height.
+.SH SYNOPSIS
+.B wmfire
+.I "[-L[1|0|on|off|yes|no]]  [-B[1|0|on|off|yes|no]]]
+[-C<0..2>][-s[1|0|on|off|yes|no]] [-P <program [args [...]]>] [-h]"
+.br
+.SH "DESCRIPTION"
+This manual page documents briefly the
+.BR wmfire 
+commands.
+This manual page was written for the Debian GNU/Linux distribution
+because the original program does not have a manual page.
+Instead, it has documentation in the GNU Info format; see below.
+.PP
+.SH OPTIONS
+The programs follow the usual GNU command line syntax.
+A summary of options are included below.
+.TP
+.B -L
+Toggles/Sets if flame height follows load
+.TP
+.B -B
+Toggles/Sets if load bar shows
+.TP
+.B -s
+Toggles/Sets if the numbers are shown
+.TP
+.B -C<0..2>
+Start at a different colormap
+.TP
+.B -P<...>
+Set "load program"; will be expanded by shell...
+.TP
+.B \-h
+Show summary of options.
+.SH "SEE ALSO"
+/usr/share/doc/wmfire/README
+.SH AUTHOR
+This manual page was written by Ryuichi Arafune <arafune@debian.org>,
+for the Debian GNU/Linux system (but may be used by others).
