@@ -1,7 +1,3 @@
+SUBDIRS = src
 
-bin_PROGRAMS = wmfire fireload_cpu fireload_file
-
-wmfire_SOURCES = wmfire.c wmgeneral.c wmgeneral.h
-wmfire_LDADD = @X11LIBS@
-
-EXTRA_DIST = wmfire.xpm lttr.xpm CREDITS
+EXTRA_DIST = ALL_I_GET_IS_A_GREY_BOX

@@ -1,56 +1,48 @@
-dnl Process this file with autoconf to produce a configure script.
-AC_INIT(wmfire.c)
-AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE(wmfire, 0.0.3.9pre4)
-AM_CONFIG_HEADER(config.h)
+AC_INIT(src/wmfire.c)
 
-dnl Checks for programs.
+AM_INIT_AUTOMAKE(wmfire, 1.2.1)
+
+AC_PROG_AWK
 AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LN_S
 
-dnl Checks for libraries.
 AC_PATH_X
-X11LIBS="-L$x_libraries -I$x_includes -lX11 -lXpm -lXext"
-AC_SUBST(X11LIBS)
-AC_MSG_CHECKING([to see if we can use X])
-AC_TRY_LINK([#include <X11/Xlib.h>],,AC_MSG_RESULT([yes]),AC_MSG_RESULT([uh.. no]); exit 1)
+AC_CHECK_LIB(X11, main)
+AC_CHECK_LIB(Xext, main)
 
-dnl Checks for header files.
+AC_HEADER_DIRENT
 AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(unistd.h)
 
-dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
-AC_TYPE_PID_T
 
-dnl Checks for library functions.
-AC_CHECK_FUNCS(strncmp strcspn strdup strspn strstr poll)
+AC_ARG_ENABLE(header, [
+Wmfire options:
+])
 
-dnl Checks for a few OSs, I don't know if hpux defines __hpux__, please
-dnl tell me if it does.. I do it here for safety..
-AC_MSG_CHECKING([OS for fireload_cpu.c])
-case $target_os in
-	sun*os* | solaris*)
-		AC_MSG_RESULT([Solaris])
-		DEFS="$DEFS -D__SOLARIS__ "
-		LIBS="$LIBS -lkstat " 
-		;;
-	hpux*)
-		AC_MSG_RESULT([HP/UX])
-		DEFS="$DEFS -Dhpux "
-		echo 'NOTE: Please drop me a line at zinx@linuxfreak.com on wether or not I'
-		echo "      to define hpux manually, or what I don't need to define."
-		;;
-	linux*)
-		AC_MSG_RESULT([Linux])
-		;;
-	netbsd*)
-		AC_MSG_RESULT([NetBSD])
-		;;
-	*)
-		AC_MSG_RESULT([*Unknown*])
-		echo 'WARNING: Unknown OS, defaulting to Linux method in fireload_cpu.c.'
-		echo '         This is probably not correct.  Please port fireload_cpu.c ;)'
-		;;
-esac
+AC_ARG_ENABLE(session,
+[  --enable-session                Compile with session management],
+       session=on, session=off)
 
-AC_OUTPUT(Makefile)
+if test "x$session" = "xon" ; then
+  AC_DEFINE(SESSION)
+  LDFLAGS="$LDFLAGS -lSM -lICE"
+fi
+AM_CONDITIONAL(SESSION, test "x$session" = "xon")
+
+AC_PATH_PROG(config, pkg-config)
+
+AC_CACHE_CHECK([for gdk2 includes], GDKINCS, [GDKINCS=`$config --cflags gtk+-2.0`])
+AC_CACHE_CHECK([for gdk2 libs], GDKLIBS, [GDKLIBS=`$config --libs gtk+-2.0 | sed -e "s/-lgtk-x11-2.0//g" -e "s/-latk-1.0//g"`])
+
+AC_CACHE_CHECK([for libgtop2 includes], GTOPINCS, [GTOPINCS=`$config --cflags libgtop-2.0`])
+AC_CACHE_CHECK([for libgtop2 libs], GTOPLIBS, [GTOPLIBS=`$config --libs libgtop-2.0`])
+
+CFLAGS="$CFLAGS $GDKINCS $GTOPINCS"
+LDFLAGS="$LDFLAGS $GDKLIBS $GTOPLIBS"
+
+AC_CHECK_FUNCS(strstr)
+
+AC_OUTPUT(Makefile src/Makefile)

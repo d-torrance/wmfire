@@ -1,12 +1,11 @@
-.TH WMFIRE 1x
+.TH WMFIRE 1
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
 .\" other parms are allowed: see man(7), man(1)
 .SH NAME
 wmfire \- Window Maker Dock app: Show the CPU usage as a fire height.
 .SH SYNOPSIS
 .B wmfire
-.I "[-L[1|0|on|off|yes|no]]  [-B[1|0|on|off|yes|no]]]
-[-C<0..2>][-s[1|0|on|off|yes|no]] [-P <program [args [...]]>] [-h]"
+.RI [ options... ]
 .br
 .SH "DESCRIPTION"
 This manual page documents briefly the
@@ -20,25 +19,47 @@ Instead, it has documentation in the GNU Info format; see below.
 The programs follow the usual GNU command line syntax.
 A summary of options are included below.
 .TP
-.B -L
-Toggles/Sets if flame height follows load
+.B -c 
+.RI [ 0..3 ]
+Monitor SMP CPU X.
 .TP
-.B -B
-Toggles/Sets if load bar shows
+.B -m
+Monitor memory load.
 .TP
-.B -s
-Toggles/Sets if the numbers are shown
+.B -n
+Monitor network load.
 .TP
-.B -C<0..2>
-Start at a different colormap
+.B -i 
+.RI [ ... ]
+Change network interface (default is ppp0)
 .TP
-.B -P<...>
-Set "load program"; will be expanded by shell...
+.B -s 
+.RI [ ... ]
+Change network speed (ppp:56K) (eth:100M)
+.TP
+.B -x
+Exclude nice'd CPU load.
+.TP
+.B -p
+Fire effect only.
+.TP
+.B -f 
+.RI [ 1..4 ]
+Change flame colour (1:Natural 2:Coronal 3:Blue 4:Green).
+.TP
+.B -l
+Lock flame colour and monitor
+.TP
+.B -b
+Activate broken window manager fix.
+.TP
+.B -r
+.RI [ ... ]
+Change resource name (default:wmfire)
 .TP
 .B \-h
 Show summary of options.
-.SH "SEE ALSO"
-/usr/share/doc/wmfire/README
 .SH AUTHOR
 This manual page was written by Ryuichi Arafune <arafune@debian.org>,
+and modified by Søren Boll Overgaard <boll@debian.org>, 
 for the Debian GNU/Linux system (but may be used by others).

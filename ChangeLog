@@ -1,50 +1,21 @@
+Changes upto version 1.2.1:
+--------------------------
 
- 21/10/1999
-	Not too much, fiddled with flame code trying to optimize it, I
-	think I at least did _some_ good..
+o Fix memory leak in event handling
 
- 30/09/1999
-	Integrated Solaris code by John Hitt
-	Realized how little work I actually do on wmfire...
+Changes upto version 1.2.0:
+--------------------------
 
-	Fixed a typo in README I just noticed, should be fireload_cpu -n not
-	fireload_file -n :/
+o Build against gdk2 libraries
+o Optional (non-working) session management
+o Icon
 
- 24/08/1999
-	Added some stuff so you can see the exact numbers being returned by
-	the external programs...
+Changes upto version 1.0.0:
+--------------------------
 
-	Made major change as to where wmfire gets the load from.. it now
-	calls external programs.. Should make making your own load functions
-	a bit easier.. I dunno though.. It'll certainly keep down the size
-	of the main program...
-
- 14/08/1999
-	Finally got off my ass and added some stuff... (Ok.. one thing)
-
-	I gave wmfire the ability to read info from a file.. it might not
-	be very efficient for large files right now, but I may add some options
-	to help with that.. it _should_ be perfectly ok for monitoring
-	temperature and the like; I use:
-		wmfire -F /proc/sys/dev/sensors/*/temp1 -S %s%s -m 40 -x 55
-	to monitor temperatures.. your mileage may vary..
-
- 19/07/1999
-	Day after the post on freshmeat..
-
-	applied a patch by Hubert Feyrer that lets it monitor load on NetBSD.
-
-	gave it a new option: '-c', lets you choose the CPU to monitor on SMP
-	linux machines..
-
- 26/06/1999
-	Decided to do some stuff...
-
-	added more colormaps (changed via new -C option or
-	right click whilst running)
-
-	fixed some configure junk
-
- 21/06/1999 (Released as 0.0.1)
-	Second day of devel, make load stuff look better and
-	made the stuff use GNU autoconf/automake
+o Rewritten to use gdk
+o Rewritten to use libgtop
+o Added memory monitoring
+o Added network monitoring
+o Removed file monitoring
+o Added proximity events

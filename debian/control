@@ -1,14 +1,13 @@
 Source: wmfire
 Section: x11
 Priority: optional
-Maintainer: Ryuichi Arafune <arafune@debian.org>
-Build-Depends: debhelper (>=3.0.5), xlibs-dev
-Standards-Version: 3.5.4
+Maintainer: Christoph Siess (CHS) <chs@geekhost.info>
+Build-Depends: debhelper (>=4.0.0), xlibs-dev, libgtop2-dev (>=2.6.0-4), libgtk2.0-dev, libgnome-dev
+Standards-Version: 3.6.1
 
 Package: wmfire
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: A very cool fiery way of showing your CPU usage!
- The display is a 64x64 window designed to Dock into 
- Window Maker's Docking bar.
-   
+Description: very cool fiery way of showing your CPU usage
+ A windowmaker (or similar) dockapp, which shows your current CPU usage as
+ a roaring fire.
