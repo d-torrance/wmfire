@@ -1,9 +1,9 @@
 Source: wmfire
 Section: x11
 Priority: optional
-Maintainer: Christoph Siess (CHS) <chs@geekhost.info>
-Build-Depends: debhelper (>=4.0.0), xlibs-dev, libgtop2-dev (>=2.6.0-4), libgtk2.0-dev, libgnome-dev
-Standards-Version: 3.6.1
+Maintainer: Debian QA Group <packages@qa.debian.org>
+Build-Depends: debhelper (>=4.0.0), libgtop2-dev (>= 2.10.0-1), libgtk2.0-dev, libgnome-dev, libxt-dev, libx11-dev
+Standards-Version: 3.6.2
 
 Package: wmfire
 Architecture: any

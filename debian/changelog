@@ -1,3 +1,19 @@
+wmfire (1.2.1-5) unstable; urgency=low
+
+  * Orphan package and set maintainer to Debian QA Group
+  * Bump standards version to 3.6.2 (no change required)
+  * Update FSF address
+  * Bump libgtop2-dev build-dep to get a version past the soname change.
+    (Closes: #316764, #322524)
+  * Break build-dependencies for the xorg transition.
+    - Remove xlibs-dev build-dep.
+    - Add libxt-dev build-dep (for the AC_PATH_X macro to detect X), upstream
+      should specialize the macro call if they don't need this lib.
+    - Add libx11-dev build-dep.
+    - Add libxext-dev build-dep.
+
+ -- Loic Minier <lool@dooz.org>  Sun,  4 Sep 2005 10:06:12 +0200
+
 wmfire (1.2.1-4) unstable; urgency=low
 
   * applied the patch from Alan Swanson (see #250937) (Closes: #250937,
