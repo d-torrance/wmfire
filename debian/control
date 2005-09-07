@@ -1,7 +1,7 @@
 Source: wmfire
 Section: x11
 Priority: optional
-Maintainer: Debian QA Group <packages@qa.debian.org>
+Maintainer: Charles Fry <debian@frogcircus.org>
 Build-Depends: debhelper (>=4.0.0), libgtop2-dev (>= 2.10.0-1), libgtk2.0-dev, libgnome-dev, libxt-dev, libx11-dev
 Standards-Version: 3.6.2
 

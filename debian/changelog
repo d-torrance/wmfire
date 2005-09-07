@@ -1,3 +1,10 @@
+wmfire (1.2.1-6) unstable; urgency=low
+
+  * New maintainer. (Closes: #326779)
+  * Previous NMU was succesfully performed. (Closes: #326575)
+
+ -- Charles Fry <debian@frogcircus.org>  Wed,  7 Sep 2005 01:23:45 -0400
+
 wmfire (1.2.1-5) unstable; urgency=low
 
   * Orphan package and set maintainer to Debian QA Group
