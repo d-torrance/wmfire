@@ -1,0 +1,74 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 01_resource.dpatch by  <debian@frogcircus.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: add -r option to specify resource name
+
+@DPATCH@
+diff -urNad --exclude=CVS --exclude=.svn ./src/wmfire.c /tmp/dpep-work.9JzguN/wmfire/src/wmfire.c
+--- ./src/wmfire.c	2004-08-01 10:06:42.000000000 -0400
++++ /tmp/dpep-work.9JzguN/wmfire/src/wmfire.c	2005-09-14 23:17:38.226063079 -0400
+@@ -133,6 +133,7 @@
+ int cpu_id = 0;
+ int cpu_nice = 1;
+ char net_dev[16] = "ppp0";
++char resource_name[64] = "wmfire";
+ int net_spd = 0;
+ char *file_name = NULL;
+ int file_max = 100;
+@@ -568,12 +569,12 @@
+ 
+ 	attr.width = 64;
+ 	attr.height = 64;
+-	attr.title = "wmfire";
++	attr.title = resource_name;
+ 	attr.event_mask = MASK;
+ 	attr.wclass = GDK_INPUT_OUTPUT;
+ 	attr.visual = gdk_visual_get_system();
+ 	attr.colormap = gdk_colormap_get_system();
+-	attr.wmclass_name = "wmfire";
++	attr.wmclass_name = resource_name;
+ 	attr.wmclass_class = "wmfire";
+ 	attr.window_type = GDK_WINDOW_TOPLEVEL;
+ 
+@@ -650,7 +651,7 @@
+ 	bm.flame = fire[cmap].data;
+ 
+ 	/* Parse command options */
+-	while ((i = getopt(argc, argv, "c:mni:s:xF:H:L:pf:lbhg:S:")) != -1) {
++	while ((i = getopt(argc, argv, "c:mni:r:s:xF:H:L:pf:lbhg:S:")) != -1) {
+ 		switch (i) {
+ 		case 'S':
+ 			if (optarg)
+@@ -681,6 +682,10 @@
+ 			if (optarg)
+ 				strncpy(net_dev, optarg, sizeof (net_dev));
+ 			break;
++		case 'r':
++			if(optarg)
++				strcpy(resource_name, optarg);
++			break;
+ 		case 's':
+ 			if (optarg)
+ 				net_spd = atoi(optarg);
+@@ -760,5 +765,6 @@
+ 		fprintf(stderr, "%d:%s ", i + 1, fire[i].text);
+ 	fprintf(stderr, "\n\t-l\t\t\tlock flame colour and monitor\n");
+ 	fprintf(stderr, "\t-b\t\t\tactivate broken window manager fix\n");
++	fprintf(stderr, "\t-r [...]\t\tchange resource name (default:%s)\n", resource_name);
+ 	fprintf(stderr, "\t-h\t\t\tprints this help\n");
+ }
+diff -urNad --exclude=CVS --exclude=.svn ./wmfire.1 /tmp/dpep-work.9JzguN/wmfire/wmfire.1
+--- ./wmfire.1	2004-06-28 15:27:52.000000000 -0400
++++ /tmp/dpep-work.9JzguN/wmfire/wmfire.1	2005-09-14 23:18:23.250972034 -0400
+@@ -93,6 +93,10 @@
+ .B -p
+ Fire effect only (no monitoring)
+ .TP
++.B -r
++.RI [ ... ]
++Change resource name (default:wmfire)
++.TP
+ .B -s [...][K|M]
+ Change the network speed (Automatic preset values for interfaces: ppp=56K
+ eth=100M)

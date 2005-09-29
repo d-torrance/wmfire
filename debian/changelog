@@ -1,3 +1,10 @@
+wmfire (1.2.2-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #328475)
+  * Moved to CDBS and dpatch.
+
+ -- Charles Fry <debian@frogcircus.org>  Thu, 29 Sep 2005 08:08:03 -0400
+
 wmfire (1.2.1-6) unstable; urgency=low
 
   * New maintainer. (Closes: #326779)

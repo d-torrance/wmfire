@@ -27,6 +27,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <math.h>
 
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
@@ -60,6 +61,7 @@
 #define FIRE_CPU	1
 #define FIRE_MEM	2
 #define FIRE_NET	3
+#define FIRE_FILE	4
 
 #define NET_SPD_PPP	56
 #define NET_SPD_ETH	100
@@ -100,6 +102,7 @@ typedef struct {
 int update_cpu();
 int update_mem();
 int update_net();
+int update_file();
 int change_cpu(int);
 void change_flame(int);
 GdkCursor *setup_cursor();
@@ -130,8 +133,10 @@ int cpu_av = 1;
 int cpu_id = 0;
 int cpu_nice = 1;
 char net_dev[16] = "ppp0";
-char resource_name[64] = "wmfire";
 int net_spd = 0;
+char *file_name = NULL;
+int file_max = 100;
+int file_min = 0;
 int cmap = 0;
 int lock = 0;
 int proximity = 0;
@@ -191,9 +196,11 @@ main(int argc, char **argv)
 						cpu_nice = !cpu_nice;
 					else if (event->button.button == 3)
 						change_flame(0);
-					else if (event->button.button == 4)
+					break;
+				case GDK_SCROLL:
+					if (event->scroll.direction == GDK_SCROLL_UP)
 						next = 1;
-					else if (event->button.button == 5)
+					else if (event->scroll.direction == GDK_SCROLL_DOWN)
 						next = 1;
 					break;
 				case GDK_ENTER_NOTIFY:
@@ -221,6 +228,11 @@ main(int argc, char **argv)
 				else if (monitor == FIRE_MEM)
 					monitor = FIRE_NET;
 				else if (monitor == FIRE_NET)
+					if (file_name)
+						monitor = FIRE_FILE;
+					else
+						monitor = FIRE_CPU;
+				else if (monitor == FIRE_FILE)
 					monitor = FIRE_CPU;
 			}
 		}
@@ -233,6 +245,8 @@ main(int argc, char **argv)
 				load = update_mem();
 			else if (monitor == FIRE_NET)
 				load = update_net();
+			else if (monitor == FIRE_FILE)
+				load = update_file();
 
 			if (load > 100)
 				load = 100;
@@ -325,7 +339,7 @@ int
 update_net()
 {
 	glibtop_netload netload;
-	static unsigned long oldtotal = 0;
+	static guint64 oldtotal = 0;
 	int percent;
 
 	glibtop_get_netload(&netload,net_dev);
@@ -336,6 +350,32 @@ update_net()
 	oldtotal = netload.bytes_total;
 
 	return percent;
+}
+
+/******************************************/
+/* Update file statistics                 */
+/******************************************/
+
+int
+update_file()
+{
+	char buf[128];
+	float percent, number;
+	FILE *fp;
+
+	if (!(fp = fopen(file_name, "r")))
+		return 100;
+
+	/* First number only. Complex parsing should be done in */
+	/* external program and value saved to monitored file.  */
+
+	fgets(buf, sizeof (buf), fp);
+	number = atof(buf);
+	fclose(fp);
+
+	percent = 100 * (number - file_min) / (file_max - file_min);
+
+	return (int) percent;
 }
 
 /******************************************/
@@ -433,6 +473,7 @@ inline void
 draw_fire(unsigned int load)
 {
 	int x, y, i, j;
+	double psi;
 
 	/* Setup hot spots */
 	for (i = 0; i < ((load >> 3) + 2); i++)
@@ -466,15 +507,24 @@ draw_fire(unsigned int load)
 				}
 			} else if (monitor == FIRE_MEM) {
 				/* Grid effect for memory arrays */
-				for (i = 0; i< 4; i++) {
+				for (i = 0; i < 4; i++) {
 					for (j = 0; j < 4; j++)
 						burn_spot(13+i*10, 13+j*10, 3);
 				}
 			} else if (monitor == FIRE_NET) {
 				/* Marching ants for network traffic */
-				for (i = 7; i< XMAX-10;i+=6) {
+				for (i = 7; i < XMAX-10; i+=6) {
 					j = i + (proximity/12) % 6;
 					burn_spot(j, 27, 3);
+				}
+			} else if (monitor == FIRE_FILE) {
+				/* Rotating disk platter */
+				burn_spot(26, 26, 3);
+				for (i = (proximity/4) % 4; i < 40; i+=4) {
+					psi = i * 3.14 / 20.0;
+					x = floor(sin(psi) * 18) + 26;
+					y = floor(-cos(psi) * 8) + 26;
+					burn_spot(x, y, 3);
 				}
 			}
 		}
@@ -518,12 +568,12 @@ make_wmfire_dockapp(void)
 
 	attr.width = 64;
 	attr.height = 64;
-	attr.title = resource_name;
+	attr.title = "wmfire";
 	attr.event_mask = MASK;
 	attr.wclass = GDK_INPUT_OUTPUT;
 	attr.visual = gdk_visual_get_system();
 	attr.colormap = gdk_colormap_get_system();
-	attr.wmclass_name = resource_name;
+	attr.wmclass_name = "wmfire";
 	attr.wmclass_class = "wmfire";
 	attr.window_type = GDK_WINDOW_TOPLEVEL;
 
@@ -579,7 +629,8 @@ make_wmfire_dockapp(void)
 
 	gdk_window_show(bm.win);
 
-	XSetWMHints(GDK_WINDOW_XDISPLAY(bm.win), win, &wmhints);
+	/* Moved after gdk_window_show due to change in GTK 2.4 */
+	XSetWMNormalHints(GDK_WINDOW_XDISPLAY(bm.win), win, &wmhints);
 
 	if (bm.x > 0 || bm.y > 0)
 		gdk_window_move(bm.win, bm.x, bm.y);
@@ -599,7 +650,7 @@ read_config(int argc, char **argv)
 	bm.flame = fire[cmap].data;
 
 	/* Parse command options */
-	while ((i = getopt(argc, argv, "c:mni:r:s:xpf:lbhg:S:")) != -1) {
+	while ((i = getopt(argc, argv, "c:mni:s:xF:H:L:pf:lbhg:S:")) != -1) {
 		switch (i) {
 		case 'S':
 			if (optarg)
@@ -628,11 +679,7 @@ read_config(int argc, char **argv)
 			break;
 		case 'i':
 			if (optarg)
-				strcpy(net_dev, optarg);
-			break;
-		case 'r':
-			if(optarg)
-				strcpy(resource_name, optarg);
+				strncpy(net_dev, optarg, sizeof (net_dev));
 			break;
 		case 's':
 			if (optarg)
@@ -644,6 +691,19 @@ read_config(int argc, char **argv)
 			break;
 		case 'x':
 			cpu_nice = 0;
+			break;
+		case 'F':
+			monitor = FIRE_FILE;
+			if (optarg)
+				file_name = strdup(optarg);
+			break;
+		case 'H':
+			if (optarg)
+				file_max = atof(optarg);
+			break;
+		case 'L':
+			if (optarg)
+				file_min = atof(optarg);
 			break;
 		case 'p':
 			monitor = FIRE_NONE;
@@ -688,15 +748,17 @@ do_help(void)
 	fprintf(stderr, "\t-c [0..%d]\t\tmonitor smp cpu X\n", GLIBTOP_NCPU-1);
 	fprintf(stderr, "\t-m\t\t\tmonitor memory load\n");
 	fprintf(stderr, "\t-n\t\t\tmonitor network load\n");
+	fprintf(stderr, "\t-F [...]\t\tmonitor file\n");
 	fprintf(stderr, "\t-i [...]\t\tchange network interface (default:%s)\n", net_dev);
 	fprintf(stderr, "\t-s [...]\t\tchange network speed (ppp:%dK) (eth:%dM)\n", NET_SPD_PPP, NET_SPD_ETH);
 	fprintf(stderr, "\t-x\t\t\texclude nice'd cpu load\n");
+	fprintf(stderr, "\t-H [...]\t\tset file maximum (high) value\n");
+	fprintf(stderr, "\t-L [...]\t\tset file minumum (low) value\n");
 	fprintf(stderr, "\t-p\t\t\tfire effect only\n");
 	fprintf(stderr, "\t-f [1..%d]\t\tchange flame colour\n\t\t\t\t", NFLAMES);
 	for (i = 0; i < NFLAMES; i++)
 		fprintf(stderr, "%d:%s ", i + 1, fire[i].text);
 	fprintf(stderr, "\n\t-l\t\t\tlock flame colour and monitor\n");
 	fprintf(stderr, "\t-b\t\t\tactivate broken window manager fix\n");
-	fprintf(stderr, "\t-r [...]\t\tchange resource name (default:%s)\n", resource_name);
 	fprintf(stderr, "\t-h\t\t\tprints this help\n");
 }

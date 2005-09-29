@@ -1,0 +1,28 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 02_gtk20.dpatch by Charles Fry <debian@frogcircus.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Revert changes dependent on GTK 2.4 for now
+
+@DPATCH@
+diff -urNad --exclude=CVS --exclude=.svn ./src/wmfire.c /tmp/dpep-work.DbPli8/wmfire/src/wmfire.c
+--- ./src/wmfire.c	2004-08-01 10:06:42.000000000 -0400
++++ /tmp/dpep-work.DbPli8/wmfire/src/wmfire.c	2005-09-28 13:48:47.858959118 -0400
+@@ -607,6 +607,7 @@
+ 	wmhints.icon_y = 0;
+ 	wmhints.window_group = win;
+ 	wmhints.flags = StateHint | IconWindowHint | IconPositionHint | WindowGroupHint;
++    XSetWMHints(GDK_WINDOW_XDISPLAY(bm.win), win, &wmhints);
+ 
+ 	bm.gc = gdk_gc_new(bm.win);
+ 
+@@ -629,9 +630,6 @@
+ 
+ 	gdk_window_show(bm.win);
+ 
+-	/* Moved after gdk_window_show due to change in GTK 2.4 */
+-	XSetWMNormalHints(GDK_WINDOW_XDISPLAY(bm.win), win, &wmhints);
+-
+ 	if (bm.x > 0 || bm.y > 0)
+ 		gdk_window_move(bm.win, bm.x, bm.y);
+ #undef MASK

@@ -2,7 +2,7 @@ Source: wmfire
 Section: x11
 Priority: optional
 Maintainer: Charles Fry <debian@frogcircus.org>
-Build-Depends: debhelper (>=4.0.0), libgtop2-dev (>= 2.10.0-1), libgtk2.0-dev, libgnome-dev, libxt-dev, libx11-dev
+Build-Depends: debhelper (>=4.0.0), libgtop2-dev (>= 2.10.0-1), libgtk2.0-dev, libxt-dev, libx11-dev, dpatch, cdbs
 Standards-Version: 3.6.2
 
 Package: wmfire
@@ -11,3 +11,5 @@ Depends: ${shlibs:Depends}
 Description: very cool fiery way of showing your CPU usage
  A windowmaker (or similar) dockapp, which shows your current CPU usage as
  a roaring fire.
+ .
+ Homepage: http://www.swanson.ukfsn.org/#wmfire

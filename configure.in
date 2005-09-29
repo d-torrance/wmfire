@@ -1,6 +1,6 @@
 AC_INIT(src/wmfire.c)
 
-AM_INIT_AUTOMAKE(wmfire, 1.2.1)
+AM_INIT_AUTOMAKE(wmfire, 1.2.2)
 
 AC_PROG_AWK
 AC_PROG_CC
