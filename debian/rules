@@ -2,8 +2,14 @@
 #-*- makefile -*-
 
 include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/dpatch.mk
+include /usr/share/cdbs/1/class/autotools.mk
+
+# remove dependency on libglib2.0-0, libpango1.0-0 and libxext6
+DEB_MAKE_INVOKE = $(DEB_MAKE_ENVVARS) make -C $(DEB_BUILDDIR) LDFLAGS="-lgdk-x11-2.0 -lgtop-2.0" wmfire_LDADD="" AM_LDFLAGS=""
+
+# don't need upstream AUTHORS
+DEB_INSTALL_DOCS_ALL = ./README ./NEWS
 
 # allow dpatch-edit-patch to work (since dpatch.mk is broken, see bug #284231)
 unpatch: deapply-dpatches

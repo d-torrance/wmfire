@@ -1,3 +1,9 @@
+Changes upto version 1.2.3:
+--------------------------
+
+o Fix regression which was creating a second window on some WM's
+o Add sticky option
+
 Changes upto version 1.2.2:
 --------------------------
 

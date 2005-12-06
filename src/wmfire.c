@@ -84,6 +84,7 @@ typedef struct {
 
 	int x;			/* Window X position */
 	int y;			/* Window Y position */
+	int sticky;		/* Window sticky */
 
 	unsigned char *flame;
 	unsigned char cmap[CMAPSIZE];
@@ -630,10 +631,12 @@ make_wmfire_dockapp(void)
 	gdk_window_show(bm.win);
 
 	/* Moved after gdk_window_show due to change in GTK 2.4 */
-	XSetWMNormalHints(GDK_WINDOW_XDISPLAY(bm.win), win, &wmhints);
+	XSetWMHints(GDK_WINDOW_XDISPLAY(bm.win), win, &wmhints);
 
 	if (bm.x > 0 || bm.y > 0)
 		gdk_window_move(bm.win, bm.x, bm.y);
+	if (bm.sticky)
+		gdk_window_stick(bm.win);
 #undef MASK
 }
 
@@ -650,7 +653,7 @@ read_config(int argc, char **argv)
 	bm.flame = fire[cmap].data;
 
 	/* Parse command options */
-	while ((i = getopt(argc, argv, "c:mni:s:xF:H:L:pf:lbhg:S:")) != -1) {
+	while ((i = getopt(argc, argv, "c:mni:s:xF:H:L:pf:lbhg:yS:")) != -1) {
 		switch (i) {
 		case 'S':
 			if (optarg)
@@ -665,6 +668,9 @@ read_config(int argc, char **argv)
 				if (j & YNegative)
 					bm.y = gdk_screen_height() - 64 + bm.y;
 			}
+			break;
+		case 'y':
+			bm.sticky = 1;
 			break;
 		case 'c':
 			monitor = FIRE_CPU;
@@ -745,6 +751,7 @@ do_help(void)
 	fprintf(stderr, "\nWmfire - Flaming Monitor Dock V %s\n\n", VERSION);
 	fprintf(stderr, "Usage: wmfire [ options... ]\n\n");
 	fprintf(stderr, "\t-g [{+-}X{+-}Y]\t\tinital window position\n");
+	fprintf(stderr, "\t-y\t\t\tset window sticky\n");
 	fprintf(stderr, "\t-c [0..%d]\t\tmonitor smp cpu X\n", GLIBTOP_NCPU-1);
 	fprintf(stderr, "\t-m\t\t\tmonitor memory load\n");
 	fprintf(stderr, "\t-n\t\t\tmonitor network load\n");

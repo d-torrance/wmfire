@@ -1,3 +1,12 @@
+wmfire (1.2.3-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #341255)
+  * Removed unused maintainer scripts.
+  * Simplified dependencies.
+  * Build with autotools.
+
+ -- Charles Fry <debian@frogcircus.org>  Tue,  6 Dec 2005 10:58:02 -0500
+
 wmfire (1.2.2-1) unstable; urgency=low
 
   * New upstream release. (Closes: #328475)
