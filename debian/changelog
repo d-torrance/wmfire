@@ -1,3 +1,10 @@
+wmfire (1.2.3-2) unstable; urgency=low
+
+  * Update to standards version 3.7.2
+  * New maintainer email address
+
+ -- Charles Fry <cfry@debian.org>  Wed,  5 Jul 2006 11:15:25 -0400
+
 wmfire (1.2.3-1) unstable; urgency=low
 
   * New upstream release. (Closes: #341255)
