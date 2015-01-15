@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Doug Torrance <dtorrance@monmouthcollege.edu>
 Build-Depends: cdbs, debhelper (>=9), libgtop2-dev (>= 2.10.0-1), libgtk2.0-dev,
  autotools-dev
-Standards-Version: 3.7.2
+Standards-Version: 3.9.6
 
 Package: wmfire
 Architecture: any
