@@ -1,28 +1,39 @@
-This package was debianized by Ryuichi Arafune <arafune@debian.org> on
-Fri, 27 Aug 1999 12:33:40 +0900.
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: wmfire
+Upstream-Contact: Alan Swanson <swanson@ukfsn.org>
+Source: http://www.swanson.ukfsn.org/#wmfire
 
-It was downloaded from http://www.swanson.ukfsn.org/#wmfire
+Files: *
+Copyright: Zinx Verituse <zinx@linuxfreak.com>
+	   Alan Swanson <swanson@ukfsn.org>
+License: GPL-2+
 
-Upstream Authors: 
-This version: Alan Swanson <swanson@ukfsn.org>
-Previous versions: Zinx Verituse <zinx@linuxfreak.com> 
+Files: debian/*
+Copyright: 1999-2001 Ryuichi Arafune <arafune@debian.org>
+	   2002-2003 Søren Boll Overgaard <boll@debian.org>
+	   2004 Christoph Siess <chs@geekhost.info>
+	   2005 Charles Fry <debian@frogcircus.org>
+	   2015 Doug Torrance <dtorrance@monmouthcollege.edu>
+License: GPL-2+
 
-Copyright: 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software Foundation: 
-
-Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-MA 02110-1301, USA.
-
-On Debian systems, the complete text of the GNU General Public
-License, version 2, can be found in /usr/share/common-licenses/GPL-2.
+License: GPL-2+
+ This program is free software; you can redistribute it
+ and/or modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later
+ version.
+ .
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more
+ details.
+ .
+ You should have received a copy of the GNU General Public
+ License along with this package; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ Boston, MA  02110-1301 USA
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
