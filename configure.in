@@ -1,6 +1,6 @@
 AC_INIT(src/wmfire.c)
 
-AM_INIT_AUTOMAKE(wmfire, 1.2.3)
+AM_INIT_AUTOMAKE(wmfire, 1.2.4)
 
 AC_PROG_AWK
 AC_PROG_CC
@@ -10,6 +10,7 @@ AC_PROG_LN_S
 AC_PATH_X
 AC_CHECK_LIB(X11, main)
 AC_CHECK_LIB(Xext, main)
+AC_CHECK_LIB(m,sincos)
 
 AC_HEADER_DIRENT
 AC_HEADER_STDC
