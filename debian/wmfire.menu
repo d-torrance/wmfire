@@ -1,1 +1,1 @@
-?package(wmfire):needs="x11"  section="Apps/Tools" title="wmfire" longtitle="very cool fiery way of showing your CPU usage" command="/usr/bin/wmfire"
+?package(wmfire):needs="x11"  section="Applications/System/Monitoring" title="wmfire" longtitle="very cool fiery way of showing your CPU usage" command="/usr/bin/wmfire"
