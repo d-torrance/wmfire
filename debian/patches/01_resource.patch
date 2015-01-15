@@ -1,6 +1,21 @@
-diff -urNad wmfire~/src/wmfire.c wmfire/src/wmfire.c
---- wmfire~/src/wmfire.c	2005-12-04 05:39:16.000000000 -0500
-+++ wmfire/src/wmfire.c	2005-12-06 10:52:31.055785408 -0500
+Description: patch to run multiple instances in (wmaker) dock
+ When starting multiple instances of wmfire (one for cpu, one for net,
+ etc) the window manager cannot see any difference between the instances.
+ So it will randomly place it in the dock.
+ .
+ I have patched wmfire to set the X resource name by hand (option -r) so the
+ window manager can see the difference. (It fixed my problem with wmaker)
+ .
+ patch included.
+ .
+ greetings,
+ Christof
+Author: Christof Douma <bugs@wizztick.net>
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=228357
+Last-Update: 2015-01-15
+
+--- a/src/wmfire.c
++++ b/src/wmfire.c
 @@ -134,6 +134,7 @@
  int cpu_id = 0;
  int cpu_nice = 1;
@@ -51,9 +66,8 @@ diff -urNad wmfire~/src/wmfire.c wmfire/src/wmfire.c
 +	fprintf(stderr, "\t-r [...]\t\tchange resource name (default:%s)\n", resource_name);
  	fprintf(stderr, "\t-h\t\t\tprints this help\n");
  }
-diff -urNad wmfire~/wmfire.1 wmfire/wmfire.1
---- wmfire~/wmfire.1	2005-12-04 05:39:16.000000000 -0500
-+++ wmfire/wmfire.1	2005-12-06 10:51:28.318260676 -0500
+--- a/wmfire.1
++++ b/wmfire.1
 @@ -98,6 +98,10 @@
  .B -p
  Fire effect only (no monitoring)
