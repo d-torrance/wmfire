@@ -23,6 +23,7 @@ wmfire \- Fiery dock app monitor
 [-p]
 [-s SPEED]
 [-x]
+[-y]
 
 .SH "DESCRIPTION"
 .PP
@@ -61,7 +62,9 @@ Activate broken window manager fix (if grey box diplayed)
 Monitor SMP CPU number X
 .TP
 .B -f [1..4]
-Change flame colour (1:Natural 2:Coronal 3:Blue 4:Green)
+Change flame colour
+.br
+(1:Natural 2:Coronal 3:Blue 4:Green)
 .TP
 .B -F [...]
 Monitor file
@@ -76,7 +79,9 @@ Show help
 Set maximum (high) value for file monitoring
 .TP
 .B -i [...]
-Change the network interface (default is "ppp0")
+Change the network interface
+.br
+(Default is "ppp0")
 .TP
 .B -l
 Lock flame colour and monitor
@@ -94,11 +99,15 @@ Monitor the network traffic
 Fire effect only (no monitoring)
 .TP
 .B -s [...][K|M]
-Change the network speed (Automatic preset values for interfaces: ppp=56K
-eth=100M)
+Change the network speed - kilobytes or megabytes
+.br
+(Automatic preset values for interfaces: ppp=56K eth=100M)
 .TP
 .B -x
 Exclude nice'd CPU load
+.TP
+.B -y
+Set window sticky for window managers which do not support dock apps
 
 .SH "EXAMPLES"
 .B wmfire -F /tmp/file -L 40 -H 60 -i eth2 -s 1000M
