@@ -6,6 +6,8 @@ Build-Depends: cdbs, debhelper (>=9), libgtop2-dev (>= 2.10.0-1), libgtk2.0-dev,
  autotools-dev
 Standards-Version: 3.9.6
 Homepage: http://www.swanson.ukfsn.org/#wmfire
+Vcs-Browser: https://github.com/d-torrance/wmfire
+Vcs-Git: https://github.com/d-torrance/wmfire.git
 
 Package: wmfire
 Architecture: any
