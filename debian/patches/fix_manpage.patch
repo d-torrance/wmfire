@@ -44,7 +44,7 @@ Last-Update: 2015-01-15
  
  .SH "DESCRIPTION"
  .PP
-@@ -54,63 +54,63 @@
+@@ -54,67 +54,67 @@
  
  .SH OPTIONS
  .TP
@@ -104,6 +104,11 @@ Last-Update: 2015-01-15
 -.B -p
 +.B \-p
  Fire effect only (no monitoring)
+ .TP
+-.B -r
++.B \-r
+ .RI [ ... ]
+ Change resource name (default:wmfire)
  .TP
 -.B -s [...][K|M]
 +.B \-s [...][K|M]
