@@ -12,5 +12,14 @@ Package: wmfire
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: very cool fiery way of showing your CPU usage
- A windowmaker (or similar) dockapp, which shows your current CPU usage as
+ A Window Maker (or similar) dockapp which shows your current CPU usage as
  a roaring fire.
+ .
+ It can monitor the average cpu load, or individual cpu load on SMP computers.
+ Additionally it can monitor the memory, network load, a file or just be set to
+ show a pretty flame. On entering the dock a burning spot replaces the cursor,
+ and after two seconds symbols to represent the current monitor are "burnt"
+ onscreen. The flame colour can also be changed.
+ .
+ It uses the GDK library to improve its speed - using less than half the cpu of
+ the original program.
