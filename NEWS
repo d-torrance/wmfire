@@ -1,35 +1,41 @@
+Miscellaneous Ramblings
+-----------------------
 
- 21/10/1999
-	Veteran wmfire users might notice a slight change in the way the
-	fire looks..  Live with it, it's faster :)  If you really must
-	have the old look, uncomment the #define OLD_LOOK line and all
-	will be as it was..
+So, I tried to be clever and use rate adaptive network monitoring.
+Needless to say, it didn't seem to work quite properly...always reading
+too low. If slowly polled once per second without any filesystem blocking
+I believe it should work.
 
- 30/09/1999
-	Solaris should now have working load stuff, if it doesn't please
-	drop me a line.
+----CODE----
 
- 24/08/1999
-	wmfire shows the numbers corresponding to the flame height by default
-	now (didn't at all before), you can turn this off via -s0
+int
+update_net()
+{
+        glibtop_netload netload;
+        unsigned long netdif;
+        static unsigned long netmax = 1, netold = 0;
+        int percent;
 
-	Now, wmfire will spawn external processes (just once, just one) to
-	determine the height of the flame.. Two such programs are included
-	with wmfire.. -c, -n, -F, -S, -m, and -x options were removed, now
-	there is a -P options to tell wmfire which program to run..
+        glibtop_get_netload(&netload,net_dev);
 
-	File stuff below was replaced, as were the default CPU load functions.
+        netdif = netload.bytes_total - netold;
 
--- Dates below here unknown
-	wmfire can now read numbers from a file... This should make it able
-	to monitor temperature via lm_sensors and /proc/sys/dev/sensors/*
-	Added options for this are -S, -F, -m, and -x
+        /* Reinitialise or restart on network down */
+        if (net_init || netdif < 0) {
+                net_init = 0;
+                netmax = 1;
+                netold = netload.bytes_total;
 
-	Added -c option to choose the CPU to monitor for SMP linux machines,
-	give it a whirl ;)
+                return 0;
+        }
 
-	Added colormaps/-C option, try it out
+        /* Rate adaptive to maximum transmission */
+        if (netdif > netmax)
+                netmax = netdif;
 
-	wmfire has a few options, namely -L and -B, they control
-	if the fire follows the load, and if the load bar is shown,
-	respectively.
+        percent = 100 * netdif / netmax;
+
+        netold = netload.bytes_total;
+
+        return percent;
+}
