@@ -1,7 +1,7 @@
 Source: wmfire
 Section: x11
 Priority: optional
-Maintainer: Charles Fry <cfry@debian.org>
+Maintainer: Doug Torrance <dtorrance@monmouthcollege.edu>
 Build-Depends: cdbs, debhelper (>=4.1.0), libgtop2-dev (>= 2.10.0-1), libgtk2.0-dev, autotools-dev
 Standards-Version: 3.7.2
 
