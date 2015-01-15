@@ -1,7 +1,9 @@
 /* fireload_file .. accesory to wmfire - Zinx Verituse */
 /* e-mail @ zinx@linuxfreak.com */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,13 +11,13 @@
 #include <time.h>
 #include <string.h>
 
-float getheight(char *scanstring, char *filename) {
-	char buffer[1024], *num;
+char *getheight(char *scanstring, char *filename) {
+	static char buffer[1024];
+	char *num;
 	FILE *f;
 	int ch;
-	float numf;
 
-	if (!(f = fopen(filename, "r"))) return 100;
+	if (!(f = fopen(filename, "r"))) return NULL;
 
 	for (; *scanstring && !feof(f); scanstring++) {
 		switch (*scanstring) {
@@ -34,7 +36,7 @@ float getheight(char *scanstring, char *filename) {
 
 	if (feof(f)) {
 		fclose(f);
-		return 100;
+		return NULL;
 	}
 	/* Premature EOF */
 
@@ -42,33 +44,21 @@ float getheight(char *scanstring, char *filename) {
 
 	num = buffer + strspn(buffer, " \t\n");
 	num[strcspn(num, " \t\n")] = 0;
-	numf = atof(num);
 
 	fclose(f);
 	
-	return numf;
+	return num;
 }
 
 void do_help(char *prgname) {
 	printf("%s -F <file> -S <string> -m <minimum> -x <maximum>\n", prgname);
 }
 
-char *showfmt(float num) {
-	static char show[64];
-	char *ext[] = { "", "K", "M", "G" };
-	int extn;
-
-	for (extn = 0; (num >= 1024) && extn < 3; extn++, num /= 1024) ; 
-	snprintf(show, 64, "%.1f%s", num, ext[extn]);	
-
-	return show;
-}
-
 int main(int argc, char *argv[]) {
 	int ch;
 
-	float min = 0, max = 0, num;
-	char *filename = NULL, *scanstr = NULL;
+	float min = 0, max = 0, numf;
+	char *filename = NULL, *scanstr = NULL, *num;
 
 	while ((ch = getopt(argc, argv, "F:S:m:x:h")) != EOF) {
 		switch (ch) {
@@ -100,7 +90,11 @@ int main(int argc, char *argv[]) {
 
 	for (;;) {
 		num = getheight(scanstr, filename);
-		printf("%f\t%s\n", num, showfmt(num)); fflush(stdout);
+		if (!num) {
+			printf("%f\tERROR\n", max); fflush(stdout);
+		} else {
+			printf("%f\t%s\n", atof(num), num); fflush(stdout);
+		}
 		usleep(100000);
 	}
 

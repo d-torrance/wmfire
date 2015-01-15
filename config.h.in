@@ -9,11 +9,17 @@
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
 
+/* Define if you have the poll function.  */
+#undef HAVE_POLL
+
 /* Define if you have the strcspn function.  */
 #undef HAVE_STRCSPN
 
 /* Define if you have the strdup function.  */
 #undef HAVE_STRDUP
+
+/* Define if you have the strncmp function.  */
+#undef HAVE_STRNCMP
 
 /* Define if you have the strspn function.  */
 #undef HAVE_STRSPN

@@ -16,6 +16,8 @@
 
 /* BEGIN ACTUAL SOURCE CODE */
 
+/* #define OLD_LOOK 1 */
+
 /* Uh.. try not to change this, but if you decide it's needed,
    be sure to edit the pixmap as well */
 #define EAT_COLORS 256
@@ -44,64 +46,115 @@
 #include "wmfire.xpm"
 #include "lttr.xpm"
 
-#define FIREW 56
+#define FIREW 56	/* If you change this, you're asking for it */
 #define FIREH 56
 #define FIREBUF_ONELINE (FIREW)
 
-int firebuf[FIREW*FIREH], lookupLine[FIREH], lookupDiv[4*EAT_COLORS];
-int intense[EAT_COLORS];
+/* the extra line (FIREH +1 ) is so we have some garbage space,
+   only 7 or 8 slots of it are actually written to */
+int firebuf[FIREW*(FIREH+1)], intense[EAT_COLORS];
+#ifdef OLD_LOOK
+int lookupLine[FIREH];
+#endif
 
 extern XpmIcon wmgen;
 extern GC NormalGC;
 GC or_GC;
 
 XImage *fireimg;
+int bytesperpixel;
 
 Pixmap letters;
+#define tolower(c) ((((c)>='A')&&((c)<='Z'))?(c)+('a'-'A'):(c))
 char char_lttrs[] = "+-.0123456789 abcdefghijklmnopqrstuvwxyz";
 
 void burn_it_ALL(int load, int nobar, int noload, char *text) {
-	int x, y, i;
-	char *t;
+	int x, i;
+#ifdef OLD_LOOK
+	int y;
+#endif
+	char *tstr;
 
 	/* Set up the hot spots */
 	if (noload) {
-		i = lookupLine[FIREH-1];
 		for (x = 0; x < 10; x++) {
-			firebuf[rand()%FIREW+i] = rand()%EAT_COLORS;
+			firebuf[(random()&0x3f/*%FIREW*/)+((FIREH-1)*FIREBUF_ONELINE)] = random()%EAT_COLORS;
 		}
 	} else {
 		/* Less hot spots, smaller flame. Simple. */
-		i = lookupLine[FIREH-1];
-		for (x = 0; x < ((load>>3)+2); x++) {
-			firebuf[rand()%FIREW+i] = rand()%EAT_COLORS;
+		for (x = 0, i = ((load>>3)+2); x < i; x++) {
+			firebuf[(random()&0x3f/*%FIREW*/)+((FIREH-1)*FIREBUF_ONELINE)] = random()%EAT_COLORS;
 		}
 
 		if (load < 100) {
-			for (x = 0; x < ((100-load)>>4); x++) {
-				firebuf[rand()%FIREW+i] = firebuf[x+i]>>1;
+			for (x = 0, i = ((100-load)>>4); x < i; x++) {
+				firebuf[(random()&0x3f/*%FIREW*/)+((FIREH-1)*FIREBUF_ONELINE)] = firebuf[x+((FIREH-1)*FIREBUF_ONELINE)]>>1;
 			}
 		}
 	}
 
 	/* This is the flame algo, average the pixel, and three touching it
 	   on the next line */
+#ifndef OLD_LOOK
+	switch (bytesperpixel) {
+		case 4:
+			for (i = ((FIREH-1)*FIREBUF_ONELINE)-1; i > 0; i--) {
+				firebuf[i] = (firebuf[i+FIREBUF_ONELINE-1]+
+					      firebuf[i+FIREBUF_ONELINE]+
+					      firebuf[i+FIREBUF_ONELINE+1]+
+					      firebuf[i])>>2;
+				*(long*)(fireimg->data+(i<<2)) = *(long*)&intense[firebuf[i]];
+			}
+			break;
+		case 3:
+			for (i = ((FIREH-1)*FIREBUF_ONELINE)-1; i > 0; i--) {
+				firebuf[i] = (firebuf[i+FIREBUF_ONELINE-1]+
+					      firebuf[i+FIREBUF_ONELINE]+
+					      firebuf[i+FIREBUF_ONELINE+1]+
+					      firebuf[i])>>2;
+				/* Any ideas on this one? 24bit will just have to */
+				/* remain slow I guess :( */
+				x = intense[firebuf[i]];
+				*(short*)(fireimg->data+(i*3)) = *(short*)&x;
+				*(char*)(fireimg->data+(i*3)+2) = *(char*)(&x+2);
+				/* memcpy(fireimg->data+(i*3), &intense[firebuf[i]], 3); */
+			}
+			break;
+		case 2:
+			for (i = ((FIREH-1)*FIREBUF_ONELINE)-1; i > 0; i--) {
+				firebuf[i] = (firebuf[i+FIREBUF_ONELINE-1]+
+					      firebuf[i+FIREBUF_ONELINE]+
+					      firebuf[i+FIREBUF_ONELINE+1]+
+					      firebuf[i])>>2;
+				*(short*)(fireimg->data+(i<<1)) = *(short*)&intense[firebuf[i]];
+			}
+			break;
+		case 1: /* Probably can't run in 8bpp without mod, but hey */
+			for (i = ((FIREH-1)*FIREBUF_ONELINE)-1; i > 0; i--) {
+				firebuf[i] = (firebuf[i+FIREBUF_ONELINE-1]+
+					      firebuf[i+FIREBUF_ONELINE]+
+					      firebuf[i+FIREBUF_ONELINE+1]+
+					      firebuf[i])>>2;
+				*(char*)(fireimg->data+i) = *(char*)&intense[firebuf[i]];
+			}
+			break;
+	}
+#else /* OLD_LOOK is defined */
 	for (y = FIREH-2; y >= 0; y--) {
 		i = lookupLine[y];
 
 		for (x = 1; x < (FIREW-1); x++) {
 			firebuf[x+i] =
-				lookupDiv[firebuf[x+i+FIREBUF_ONELINE]+
-					  firebuf[x+i+FIREBUF_ONELINE+1]+
-					  firebuf[x+i+FIREBUF_ONELINE-1]+
-					  firebuf[x+i]];
+				(firebuf[x+i+FIREBUF_ONELINE]+
+				 firebuf[x+i+FIREBUF_ONELINE+1]+
+				 firebuf[x+i+FIREBUF_ONELINE-1]+
+				 firebuf[x+i])>>2;
 
-			/* Plop */
-			memcpy(fireimg->data+(fireimg->bytes_per_line*y + x*fireimg->bytes_per_line/fireimg->width),
-				&intense[firebuf[x+i]], fireimg->bytes_per_line/fireimg->width);
+			memcpy(fireimg->data+(fireimg->bytes_per_line*y + x*bytesperpixel),
+				&intense[firebuf[x+i]], bytesperpixel);
 		}
 	}
-
+#endif /* not def OLD_LOOK */
 	if (nobar) {
 		XPutImage(display, wmgen.pixmap, NormalGC, fireimg, 0, 0, 4, 4, FIREW, FIREH);
 	} else {
@@ -117,8 +170,8 @@ void burn_it_ALL(int load, int nobar, int noload, char *text) {
 		x = strlen(text);
 		for (i = FIREW-(x*6); i < 4; x--, text++) { i = FIREW-(x*6); }
 		for (; *text; i += 6, text++) {
-			if ((t = strchr(char_lttrs, *text))) {
-				XCopyArea(display, letters, wmgen.pixmap, or_GC, (t-char_lttrs)*6, 0, 6, 7, i+4, 4);
+			if ((tstr = strchr(char_lttrs, tolower(*text)))) {
+				XCopyArea(display, letters, wmgen.pixmap, or_GC, (tstr-char_lttrs)*6, 0, 6, 7, i+4, 4);
 			}
 		}
 	}
@@ -128,7 +181,7 @@ void loadcmap(int mapnum) {
 	XImage *colormap;
 	int i;
 
-	colormap = XGetImage(display, wmgen.pixmap, 0, 64+mapnum, EAT_COLORS, 1, 0xffffffff, XYPixmap);
+	colormap = XGetImage(display, wmgen.pixmap, 0, 64+mapnum, EAT_COLORS, 1, AllPlanes, XYPixmap);
 	for (i = 0; i < EAT_COLORS; i++) {
 		intense[i] = XGetPixel(colormap, i, 0);
 	}
@@ -233,17 +286,20 @@ void do_help(char *prgname) {
 "\t[-L[1|0|on|off|yes|no]] [-B[1|0|on|off|yes|no]]] [-C<0..%d>]\n"
 "\t[-s[1|0|on|off|yes|no]] [-P <program [args [...]]>] [-h]\n"
 "\n"
-"\t-L        Toggles/Sets if flame height follows load\n"
+"\t-L        Toggles/Sets if flame height follows info provided by -P\n"
 "\t-B        Toggles/Sets if load bar shows\n"
 "\t-s        Toggles/Sets if the numbers are shown\n"
 "\t-C<0..%d> Start at a different colormap\n"
 "\t-P <...>  Set \"load program\"; will be expanded by shell...\n"
+"\t-d<delay> Set delay between frames (in miliseconds, 1000/delay = fps)\n"
+"\t-f<frames>Set number of frames to drop per update\n"
 "\t-h\t Shows this short bit of help\n", prgname, CMAPS-1, CMAPS-1);
 }
 
 int main(int argc, char *argv[]) {
-	int i, load, loadtick, nobar = 0, noload = 0,
-	    cmap = 0, cpunum = 0, shownice = 1, shownums = 1;
+	int i, frames = 0, load, loadtick, nobar = 0, noload = 0,
+	    cmap = 0, shownice = 1, shownums = 1;
+	int delay = 20000, fskip = 0;
 
 	char *load_prog = "fireload_cpu";
 	struct _loadstuff loads;
@@ -251,7 +307,7 @@ int main(int argc, char *argv[]) {
 	XEvent event;
 	char *errchar;
 
-	while ((i = getopt(argc, argv, "L::B::s::C:F:S:m:x:hvP:")) != EOF) {
+	while ((i = getopt(argc, argv, "L::B::s::C:F:S:m:x:hvP:d:f:")) != EOF) {
 		switch (i) {
 			case 'L':
 				if (optarg) noload = offon(optarg);
@@ -262,7 +318,7 @@ int main(int argc, char *argv[]) {
 				else nobar = !nobar;
 				break;
 			case 's':
-				if (optarg) shownums = offon(optarg);
+				if (optarg) shownums = !offon(optarg);
 				else shownums = !shownums;
 				break;
 			case 'C':
@@ -276,6 +332,25 @@ int main(int argc, char *argv[]) {
 				
 			case 'P':
 				load_prog = optarg;
+				break;
+
+			case 'd':
+				errchar = NULL;
+				delay = strtol(optarg, &errchar, 10);
+				if (*errchar || delay < 0) {
+					do_help(argv[0]);
+					exit(-1);
+				}
+				delay *= 1000;
+				break;
+				
+			case 'f':
+				errchar = NULL;
+				fskip = strtol(optarg, &errchar, 10);
+				if (*errchar || fskip < 0) {
+					do_help(argv[0]);
+					exit(-1);
+				}
 				break;
 
 			case 'v':
@@ -314,26 +389,29 @@ int main(int argc, char *argv[]) {
 	cmap %= CMAPS;
 	loadcmap(cmap);
 
-	/* Fix up a lookup table for division by four */
-	for (i = 0; i < (4*EAT_COLORS); i++) {
-		lookupDiv[i] = i>>2;
-	}
-
 	/* Fix up a lookup table for lines */
+#ifdef OLD_LOOK
 	for (i = 0; i < FIREH; i++) {
 		lookupLine[i] = i*FIREBUF_ONELINE;
 	}
+#endif
 
 	/* Set up a few places the user might wanna click... */
 	AddMouseRegion(0, 4, 54, 61, 61);
-	AddMouseRegion(1, 4, 4, 58, 53);
+	AddMouseRegion(1, 4, 12, 58, 53);
+	AddMouseRegion(2, 4, 4, 61, 11);
 
-	fireimg = XGetImage(display, wmgen.pixmap, 69, 4, FIREW, FIREH, 0xffffffff, ZPixmap);
+	fireimg = XGetImage(display, wmgen.pixmap, 69, 4, FIREW, FIREH, AllPlanes, ZPixmap);
+	bytesperpixel = fireimg->bytes_per_line/fireimg->width;
 
 	if (nobar) XCopyArea(display, wmgen.pixmap, wmgen.pixmap, NormalGC, 65, 0, 64, 64, 0, 0);
 	else XCopyArea(display, wmgen.pixmap, wmgen.pixmap, NormalGC, 130, 0, 64, 64, 0, 0);
 
 	startload(&loads, load_prog);
+
+#ifdef HAVE_POLL
+	delay /= 1000; /* poll uses milliseconds */
+#endif
 
 	for(;;) {
 		if (XPending(display)) {
@@ -359,6 +437,9 @@ int main(int argc, char *argv[]) {
 							break;
 						case 1: noload = !noload;
 							break;
+						case 2:
+							shownums = !shownums;
+							break;
 					}
 			}
 		}
@@ -368,8 +449,16 @@ int main(int argc, char *argv[]) {
 			burn_it_ALL(scale100(loads.load, loads.min, loads.max), nobar, noload, loads.show);
 		else
 			burn_it_ALL(scale100(loads.load, loads.min, loads.max), nobar, noload, NULL);
-		RedrawWindow();
-		usleep(20000);
+
+		if ((frames--) <= 0) {
+			RedrawWindow();
+			frames = fskip;
+		}
+#ifdef HAVE_POLL /* Are there systems without poll()? */
+		poll(NULL, 0, delay);
+#else
+		usleep(delay);
+#endif
 	}
 
 	fprintf(stderr, "Congratulations, something truely awful has happened.\n");
