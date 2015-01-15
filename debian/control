@@ -11,7 +11,7 @@ Vcs-Git: https://github.com/d-torrance/wmfire.git
 
 Package: wmfire
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: very cool fiery way of showing your CPU usage
  A windowmaker (or similar) dockapp, which shows your current CPU usage as
  a roaring fire.
