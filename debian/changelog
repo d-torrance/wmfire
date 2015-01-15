@@ -1,3 +1,23 @@
+wmfire (1.2.4-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+  * New maintainer (Closes: TBA).
+  * debian/compat
+    - Bump to 9.
+  * debian/control
+    - Bump versioned dependency on debhelper to >=9.
+    - Bump Standards-Version to 3.9.6.
+    - Move Homepage from Description to its own field.
+    - Add Vcs-*.
+  * debian/rules
+    - Add get-orig-source target.
+  * debian/source/format
+    - New file; use 3.0 (quilt).
+  * debian/watch
+    - Remove unused parameters.
+
+ -- Doug Torrance <dtorrance@monmouthcollege.edu>  Wed, 14 Jan 2015 23:25:41 -0600
+
 wmfire (1.2.3-2) unstable; urgency=low
 
   * Update to standards version 3.7.2
