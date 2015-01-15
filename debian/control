@@ -5,6 +5,7 @@ Maintainer: Doug Torrance <dtorrance@monmouthcollege.edu>
 Build-Depends: cdbs, debhelper (>=9), libgtop2-dev (>= 2.10.0-1), libgtk2.0-dev,
  autotools-dev
 Standards-Version: 3.9.6
+Homepage: http://www.swanson.ukfsn.org/#wmfire
 
 Package: wmfire
 Architecture: any
@@ -12,5 +13,3 @@ Depends: ${shlibs:Depends}
 Description: very cool fiery way of showing your CPU usage
  A windowmaker (or similar) dockapp, which shows your current CPU usage as
  a roaring fire.
- .
-  Homepage: http://www.swanson.ukfsn.org/#wmfire
