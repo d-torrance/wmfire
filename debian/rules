@@ -10,3 +10,6 @@ DEB_MAKE_INVOKE = $(DEB_MAKE_ENVVARS) make -C $(DEB_BUILDDIR) LDFLAGS="-lgdk-x11
 
 # don't need upstream AUTHORS
 DEB_INSTALL_DOCS_ALL = ./README ./NEWS
+
+get-orig-source:
+	uscan --verbose --force-download --rename
