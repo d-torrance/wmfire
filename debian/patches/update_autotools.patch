@@ -1,0 +1,48 @@
+Description: Silence various autotools warnings.
+ In particular,
+ - configure.ac:38: warning: AC_CACHE_VAL(GDKINCS, ...): suspicious cache-id,
+   must contain _cv_ to be cached (and several similar warnings)
+ - configure.ac:3: warning: AM_INIT_AUTOMAKE: two- and three-arguments forms
+   are deprecated.
+ - src/Makefile.am:17: warning: 'INCLUDES' is the old name for 'AM_CPPFLAGS'
+   (or '*_CPPFLAGS')
+Author: Doug Torrance <dtorrance@monmouthcollege.edu>
+Last-Update: 2015-01-16
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -1,6 +1,6 @@
+-AC_INIT(src/wmfire.c)
+-
+-AM_INIT_AUTOMAKE(wmfire, 1.2.4)
++AC_INIT([wmfire], [1.2.4])
++AC_CONFIG_SRCDIR([src/wmfire.c])
++AM_INIT_AUTOMAKE
+ 
+ AC_PROG_AWK
+ AC_PROG_CC
+@@ -35,11 +35,11 @@
+ 
+ AC_PATH_PROG(config, pkg-config)
+ 
+-AC_CACHE_CHECK([for gdk2 includes], GDKINCS, [GDKINCS=`$config --cflags gtk+-2.0`])
+-AC_CACHE_CHECK([for gdk2 libs], GDKLIBS, [GDKLIBS=`$config --libs gtk+-2.0 | sed -e "s/-lgtk-x11-2.0//g" -e "s/-latk-1.0//g"`])
++AC_CACHE_CHECK([for gdk2 includes], ac_cv_cflags_GDKINCS, [GDKINCS=`$config --cflags gtk+-2.0`])
++AC_CACHE_CHECK([for gdk2 libs], ac_cv_ldflags_GDKLIBS, [GDKLIBS=`$config --libs gtk+-2.0 | sed -e "s/-lgtk-x11-2.0//g" -e "s/-latk-1.0//g"`])
+ 
+-AC_CACHE_CHECK([for libgtop2 includes], GTOPINCS, [GTOPINCS=`$config --cflags libgtop-2.0`])
+-AC_CACHE_CHECK([for libgtop2 libs], GTOPLIBS, [GTOPLIBS=`$config --libs libgtop-2.0`])
++AC_CACHE_CHECK([for libgtop2 includes], ac_cv_cflags_GTOPINCS, [GTOPINCS=`$config --cflags libgtop-2.0`])
++AC_CACHE_CHECK([for libgtop2 libs], ac_cv_ldflags_GTOPLIBS, [GTOPLIBS=`$config --libs libgtop-2.0`])
+ 
+ CFLAGS="$CFLAGS $GDKINCS $GTOPINCS"
+ LDFLAGS="$LDFLAGS $GDKLIBS $GTOPLIBS"
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -14,5 +14,5 @@
+ AM_LDFLAGS = -lXext -lX11 \
+ 	-L/usr/X11R6/lib -L/usr/local/lib
+ 
+-INCLUDES = -I/usr/X11R6/include \
++AM_CPPFLAGS = -I/usr/X11R6/include \
+ 	-I/usr/local/include
