@@ -3,3 +3,4 @@ rename_configure.patch
 update_autotools.patch
 fix_manpage.patch
 gdk_updates.patch
+fix_-Wunused-result.patch
