@@ -4,3 +4,4 @@ update_autotools.patch
 fix_manpage.patch
 gdk_updates.patch
 fix_-Wunused-result.patch
+freebsd_port.patch

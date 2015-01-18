@@ -1,0 +1,76 @@
+Description: Port to GNU/kFreeBSD.
+ When run on Debian GNU/kFreeBSD, wmfire exits with the error "glibtop:        
+ glibtop_get_netload: Function not implemented" when the user selects network
+ monitoring mode.
+ Instead of libgtop, we use sysctl to get the network statistics.
+Author: Doug Torrance <dtorrance@monmouthcollege.edu>
+Last-Update: 2015-01-18
+
+--- a/src/wmfire.c
++++ b/src/wmfire.c
+@@ -37,6 +37,10 @@
+ #include <glibtop/mem.h>
+ #include <glibtop/netload.h>
+ 
++#if defined __FreeBSD__ || __FreeBSD_kernel__
++#include <netinet/tcp_var.h>
++#endif
++
+ #include "session.h"
+ #include "flamedefault.h"
+ #include "flamecorona.h"
+@@ -331,12 +335,45 @@
+ /* Update network statistics              */
+ /******************************************/
+ 
++#if defined __FreeBSD__ || __FreeBSD_kernel__
++#define GETSYSCTL(name, var) getsysctl(name, &(var), sizeof(var))
++
++static void
++getsysctl(const char *name, void *ptr, size_t len)
++{
++	size_t nlen = len;
++
++	if (sysctlbyname(name, ptr, &nlen, NULL, 0) == -1) {
++		fprintf(stderr, "sysctl(%s...) failed: %s\n", name,
++			strerror(errno));
++		exit(1);
++	}
++	if (nlen != len) {
++		fprintf(stderr, "sysctl(%s...) expected %lu, got %lu\n",
++			name, (unsigned long)len, (unsigned long)nlen);
++		exit(1);
++	}
++}
++#endif
++
+ int
+ update_net()
+ {
++	int percent;
++
++#if defined __FreeBSD__ || __FreeBSD_kernel__
++	struct tcpstat netload;
++	uint64_t total;
++	static uint64_t oldtotal = 0;
++
++ 	GETSYSCTL("net.inet.tcp.stats", netload);
++	total = netload.tcps_sndbyte + netload.tcps_rcvbyte;
++	percent = 100 * (total - oldtotal) / (net_spd / UPDATE_SEC);
++
++	oldtotal = total;
++#else
+ 	glibtop_netload netload;
+ 	static guint64 oldtotal = 0;
+-	int percent;
+ 
+ 	glibtop_get_netload(&netload,net_dev);
+ 
+@@ -344,6 +381,7 @@
+ 	percent = 100 * (netload.bytes_total - oldtotal) / (net_spd / UPDATE_SEC);
+ 
+ 	oldtotal = netload.bytes_total;
++#endif
+ 
+ 	return percent;
+ }
