@@ -1,7 +1,7 @@
 wmfire (1.2.4-1) UNRELEASED; urgency=medium
 
   * New upstream release.
-  * New maintainer (Closes: TBA).
+  * New maintainer (Closes: #775470).
   * debian/compat
     - Bump to 9.
   * debian/control
@@ -9,14 +9,48 @@ wmfire (1.2.4-1) UNRELEASED; urgency=medium
     - Bump Standards-Version to 3.9.6.
     - Move Homepage from Description to its own field.
     - Add Vcs-*.
+    - Remove cdbs from Build-Depends.
+    - Add ${misc:Depends} to Depends.
+    - Remove versioned dependency on libgtop2-dev; no earlier version
+      still exists in Debian.
+    - Replace autotools-dev with dh-autoreconf in Build-Depends.
+  * debian/control
+    - Lengthen long description with information from wmfire homepage.
+  * debian/copyright
+    - Update to DEP5 machine-readable format, version 1.0.
+  * debian/dirs
+    - Remove unnecessary file.
+  * debian/docs
+    - Add AUTHORS, NEWS, and README.
+    - Remove ALL_I_GET_IS_A_GREY_BOX; no longer relevant.
+  * debian/patches:
+    - (rename_configure.in.patch) Silence deprecated-configure-filename
+      Lintian warning.
+    - (fix_manpage.patch) Escape hyphens.
+    - (01_resource.patch) Convert to quilt; add DEP3 header.
+    - (gdk_updates.patch) Update for newer versions of GDK.
+    - (update_autotools.patch) Silence various autotools warnings.
+    - (fix_-Wunused-result.patch) Fix compiler warning.
+    - (freebsd_port.patch) Port to Debian GNU/kFreeBSD.
   * debian/rules
     - Add get-orig-source target.
+    - Update to use dh.
+    - Use dh_autoreconf.
+    - Append "-Wl, --as-needed" to LDFLAGS to reduce "useless dependency"
+      warnings from dpkg-shlibdeps.
   * debian/source/format
     - New file; use 3.0 (quilt).
+  * debian/upstream/signing-key.asc
+    - New file.
   * debian/watch
     - Remove unused parameters.
+    - Add pgpsigurlmangle option.
+  * debian/wmfire.menu
+    - Update Section.
+    - Add newlines for readability.
+    - Rename to debian/menu.
 
- -- Doug Torrance <dtorrance@monmouthcollege.edu>  Wed, 14 Jan 2015 23:25:41 -0600
+ -- Doug Torrance <dtorrance@monmouthcollege.edu>  Sun, 18 Jan 2015 22:03:05 -0600
 
 wmfire (1.2.3-2) unstable; urgency=low
 
