@@ -21,5 +21,5 @@ Description: very cool fiery way of showing your CPU usage
  and after two seconds symbols to represent the current monitor are "burnt"
  onscreen. The flame colour can also be changed.
  .
- It uses the GDK library to improve its speed - using less than half the cpu of
+ It uses the GDK library to improve its speed - using less than half the CPU of
  the original program.
